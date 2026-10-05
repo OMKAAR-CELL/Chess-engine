@@ -7,10 +7,10 @@
 using namespace std;
 
 
-vector<pair<int,int> > getWhitePawnMove(char board[8][8],int row, int col){
+vector<pair<int,int> > getWhitePawnMove(char board[8][8],int row, int col,int howmuch=1){
     vector<pair<int,int> > moves;
     if(row-1>=0 && board[row-1][col]=='.'){
-        if(row==6&&board[row-2][col]=='.'){
+        if(row==6&&board[row-2][col]=='.'&&howmuch==2){
             moves.push_back(make_pair(row-2,col));
         }
         moves.push_back(make_pair(row-1,col));
@@ -58,6 +58,15 @@ vector<pair<int,int> > makeBlackPawnCaptureRight(char board[8][8], int row, int 
     if(row+1<=7 && col+1<=7 && isupper(board[row+1][col+1])){
         moves.push_back(make_pair(row+1,col+1));
     }
+    return moves;
+}
+
+vector<pair<int,int> > getAllWhitePawnMoves(char board[8][8], int row, int col,int how_much=1){
+    vector<pair<int,int> > moves = getWhitePawnMove(board, row, col,how_much);
+    vector<pair<int,int> > left = makeWhitePawnCaptureLeft(board, row, col);
+    vector<pair<int,int> > right = makeWhitePawnCaptureRight(board, row, col);
+    moves.insert(moves.end(), left.begin(), left.end());
+    moves.insert(moves.end(), right.begin(), right.end());
     return moves;
 }
 
