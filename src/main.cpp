@@ -2,6 +2,9 @@
 #include <vector>
 #include <utility>
 #include <unordered_map>
+#include "board.h"
+#include "moves.h"
+
 using namespace std;
 
 
@@ -28,45 +31,6 @@ unordered_map<char,int> rank_dict={
 };
 
 
-
-void PrintBoard(char board[8][8]){
-    for(int i=0;i<8;i++){
-        for(int j=0;j<8;j++){
-            cout<<board[i][j]<<" ";
-        }
-        cout<<"\n";
-    }
-}
-
-vector<pair<int,int>> getWhitePawnMove(char board[8][8],int row, int col){
-    vector<pair<int,int>> moves;
-    if(row-1>=0 && board[row-1][col]=='.'){
-        if(row==6&&board[row-2][col]=='.'){
-            moves.push_back({row-2,col});
-        }
-        moves.push_back({row-1,col});
-    }
-    return moves;
-}
-
-vector<pair<int,int>> getBlackPawnMove(char board[8][8], int row, int col){
-    vector<pair<int,int>> moves;
-    if(board[row+1][col]=='.' && row+1<=7){
-        if(row==1 && board[row+2][col]=='.'){
-            moves.push_back({row+2,col});
-        }
-        moves.push_back({row+1,col});
-    }
-    return moves;
-}
-
-void makeMove(char board[8][8],int fromRow,int fromCol,int toRow,int toCol)
-{
-    board[toRow][toCol]=board[fromRow][fromCol];
-    board[fromRow][fromCol]='.';
-}
-
-
 int main(){
     char board[8][8]={{'r','n','b','q','k','b','n','r'},
                 {'p','p','p','p','p','p','p','p'},
@@ -78,9 +42,9 @@ int main(){
                 {'R','N','B','Q','K','B','N','R'}};
                 
     PrintBoard(board);
-    auto moves=getWhitePawnMove(board,6,4);
-    for(auto& m:moves){
-        cout<<"Move to: ("<<m.first<<", "<<m.second<<")\n";
+    vector<pair<int,int> > moves=getWhitePawnMove(board,6,4);
+    for(size_t i=0;i<moves.size();i++){
+        cout<<"Move to: ("<<moves[i].first<<", "<<moves[i].second<<")\n";
         cout<<"Number of moves: "<<moves.size()<<"\n";
     }
     if(!moves.empty()){
@@ -89,8 +53,8 @@ int main(){
         PrintBoard(board);
     }
     moves=getBlackPawnMove(board,1,4);
-    for(auto& m:moves){
-        cout<<"Move to: ("<<m.first<<", "<<m.second<<")\n";
+    for(size_t i=0;i<moves.size();i++){
+        cout<<"Move to: ("<<moves[i].first<<", "<<moves[i].second<<")\n";
         cout<<"Number of moves: "<<moves.size()<<"\n";
     }
     if(!moves.empty()){
@@ -98,6 +62,48 @@ int main(){
         cout<<"\nBoard after move:\n";
         PrintBoard(board);
     }
+    moves=getWhitePawnMove(board,6,3);
+    for(size_t i=0;i<moves.size();i++){
+        cout<<"Move to: ("<<moves[i].first<<", "<<moves[i].second<<")\n";
+        cout<<"Number of moves: "<<moves.size()<<"\n";
+    }
+    if(!moves.empty()){
+        makeMove(board,6,3,moves[0].first,moves[0].second);
+        cout<<"\nBoard after move:\n";
+        PrintBoard(board);
+    }
+    moves=getBlackPawnMove(board,1,3);
+    for(size_t i=0;i<moves.size();i++){
+        cout<<"Move to: ("<<moves[i].first<<", "<<moves[i].second<<")\n";
+        cout<<"Number of moves: "<<moves.size()<<"\n";
+    }
+    if(!moves.empty()){
+        makeMove(board,1,3,moves[0].first,moves[0].second);
+        cout<<"\nBoard after move:\n";
+        PrintBoard(board);
+    }
+    moves=makeWhitePawnCaptureRight(board,4,3);
+    for(size_t i=0;i<moves.size();i++){
+        cout<<"Move to: ("<<moves[i].first<<", "<<moves[i].second<<")\n";
+        cout<<"Number of moves: "<<moves.size()<<"\n";
+    }
+    if(!moves.empty()){
+        makeMove(board,4,3,moves[0].first,moves[0].second);
+        cout<<"\nBoard after move:\n";
+        PrintBoard(board);
+    }
+    moves=makeBlackPawnCaptureRight(board,3,3);
+    for(size_t i=0;i<moves.size();i++){
+        cout<<"Move to: ("<<moves[i].first<<", "<<moves[i].second<<")\n";
+        cout<<"Number of moves: "<<moves.size()<<"\n";
+    }
+    if(!moves.empty()){
+        makeMove(board,3,3,moves[0].first,moves[0].second);
+        cout<<"\nBoard after move:\n";
+        PrintBoard(board);
+    }
+
+
             
     return 0;
 }
